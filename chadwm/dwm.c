@@ -326,6 +326,7 @@ static void switchtag(void);
 static Monitor *systraytomon(Monitor *m);
 static void tabmode(const Arg *arg);
 static void tag(const Arg *arg);
+static void cycletag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
@@ -355,6 +356,7 @@ static void updateicon(Client *c);
 static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
+static void cycleview(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static Client *wintosystrayicon(Window w);
@@ -3095,6 +3097,13 @@ void tag(const Arg *arg) {
   }
 }
 
+void cycletag(const Arg *arg){
+  Arg tmp;
+  tmp.ui = 1 << ((selmon->pertag->curtag + arg->i + tag_length - 1) % tag_length);
+  tag(&tmp);
+  view(&tmp);
+}
+
 void tagmon(const Arg *arg) {
   if (!selmon->sel || !mons->next)
     return;
@@ -3695,10 +3704,19 @@ void view(const Arg *arg) {
 
 	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
 		togglebar(NULL);
+
   focus(NULL);
   arrange(selmon);
-  	updatecurrentdesktop();
+  updatecurrentdesktop();
 }
+
+
+void cycleview(const Arg *arg){
+  Arg tmp;
+  tmp.ui = 1 << ((selmon->pertag->curtag + arg->i + tag_length - 1) % tag_length);
+  view(&tmp);
+}
+
 
 Client *wintoclient(Window w) {
   Client *c;
