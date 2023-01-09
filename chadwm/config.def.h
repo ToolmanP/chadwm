@@ -33,14 +33,14 @@ static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "togg
 static const char *light_up[] = {"/usr/bin/light", "-A", "5", NULL};
 static const char *light_down[] = {"/usr/bin/light", "-U", "5", NULL};
 
-#define ICONSIZE 19   /* icon size */
+#define ICONSIZE 36   /* icon size */
 #define ICONSPACING 8 /* space between icon and title */
 
-static const char *fonts[]          = {"Iosevka:style:medium:size=12" ,"JetBrainsMono Nerd Font:style:medium:size=11",
+static const char *fonts[]          = {"NotoSans CJK SC:style:medium:size=12" ,"Hack Nerd Font:style:medium:size=11",
                                         "Material Design Icons Desktop:size=11" };
 
 // theme
-#include "themes/onedark.h"
+#include "themes/catppuccin.h"
 
 static const char *colors[][3]      = {
     /*                     fg       bg      border */
@@ -62,7 +62,8 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static char *tags[] = {"", "", "", "", ""};
+static char *tags[] = {"", "󰅩", "", "󰎄", ""};
+static const int tag_length = LENGTH(tags);
 
 static const char* eww[] = { "eww", "open" , "eww", NULL };
 
@@ -149,16 +150,20 @@ static Key keys[] = {
     {MODKEY,                            XK_u,       spawn,
         SHCMD("maim --select | xclip -selection clipboard -t image/png")},
 
-    { MODKEY,                           XK_c,       spawn,          SHCMD("rofi -show drun") },
-    { MODKEY,                           XK_Return,  spawn,            SHCMD("st")},
+    { MODKEY,                           XK_r,       spawn,          SHCMD("rofi -show drun") },
+    { MODKEY,                           XK_b,       spawn,          SHCMD("flatpak run com.microsoft.Edge")},
+    { MODKEY,                           XK_o,       spawn,          SHCMD("flatpak run md.obsidian.Obsidian")},
+    { MODKEY,                           XK_c,       spawn,          SHCMD("code")},
+
+    { MODKEY,                           XK_Return,  spawn,            SHCMD("kitty")},
 
     // toggle stuff
-    { MODKEY,                           XK_b,       togglebar,      {0} },
+    // { MODKEY|ShiftMask,                 XK_b,       togglebar,      {0} },
+    //
     { MODKEY|ControlMask,               XK_t,       togglegaps,     {0} },
     { MODKEY|ShiftMask,                 XK_space,   togglefloating, {0} },
     { MODKEY,                           XK_f,       togglefullscr,  {0} },
 
-    { MODKEY|ControlMask,               XK_w,       tabmode,        { -1 } },
     { MODKEY,                           XK_j,       focusstack,     {.i = +1 } },
     { MODKEY,                           XK_k,       focusstack,     {.i = -1 } },
     { MODKEY,                           XK_i,       incnmaster,     {.i = +1 } },
@@ -210,8 +215,16 @@ static Key keys[] = {
     { MODKEY,                           XK_space,   setlayout,      {0} },
     { MODKEY|ControlMask,               XK_comma,   cyclelayout,    {.i = -1 } },
     { MODKEY|ControlMask,               XK_period,  cyclelayout,    {.i = +1 } },
-    { MODKEY,                           XK_0,       view,           {.ui = ~0 } },
+    { MODKEY,                           XK_0,       view,           {.ui = ~0 }},
+
+    { MODKEY,                           XK_Left,    cycleview,      {.i = -1 }},
+    { MODKEY,                           XK_Right,   cycleview,      {.i = +1 }},
+
     { MODKEY|ShiftMask,                 XK_0,       tag,            {.ui = ~0 } },
+    
+    { MODKEY|ShiftMask,                 XK_Left,    cycletag,      {.i = -1 }},
+    { MODKEY|ShiftMask,                 XK_Right,   cycletag,      {.i = +1 }},
+
     { MODKEY,                           XK_comma,   focusmon,       {.i = -1 } },
     { MODKEY,                           XK_period,  focusmon,       {.i = +1 } },
     { MODKEY|ShiftMask,                 XK_comma,   tagmon,         {.i = -1 } },
@@ -219,14 +232,14 @@ static Key keys[] = {
 
     // change border size
     { MODKEY|ShiftMask,                 XK_minus,   setborderpx,    {.i = -1 } },
-    { MODKEY|ShiftMask,                 XK_p,       setborderpx,    {.i = +1 } },
+    { MODKEY|ShiftMask,                 XK_equal,   setborderpx,    {.i = +1 } },
     { MODKEY|ShiftMask,                 XK_w,       setborderpx,    {.i = default_border } },
 
     // kill dwm
     { MODKEY|ControlMask,               XK_q,       spawn,        SHCMD("killall bar.sh dwm") },
 
     // kill window
-    { MODKEY,                           XK_q,       killclient,     {0} },
+    { MODKEY,                           XK_w,       killclient,     {0} },
 
     // restart
     { MODKEY|ShiftMask,                 XK_r,       restart,           {0} },
@@ -253,7 +266,7 @@ static Button buttons[] = {
     { ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
     { ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
     { ClkWinTitle,          0,              Button2,        zoom,           {0} },
-    { ClkStatusText,        0,              Button2,        spawn,          SHCMD("st") },
+    { ClkStatusText,        0,              Button2,        spawn,          SHCMD("kitty") },
 
     /* Keep movemouse? */
     /* { ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} }, */
